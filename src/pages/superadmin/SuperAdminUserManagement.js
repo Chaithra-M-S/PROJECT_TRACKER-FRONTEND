@@ -7,6 +7,7 @@ const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [projects, setProjects] = useState([]);
 
   const [form, setForm] = useState({
     firstName: "",
@@ -15,10 +16,11 @@ const UserManagement = () => {
     phone: "",
     role: "",
     designation: "",
+    project: "",
     password: "",
   });
 
-  // 🔐 Generate Password
+  
   const generatePassword = () => {
     const chars =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#";
@@ -29,9 +31,10 @@ const UserManagement = () => {
     return pass;
   };
 
-  // 📦 Load Users
+
   useEffect(() => {
     fetchUsers();
+    fetchProjects();
   }, []);
 
   const fetchUsers = async () => {
@@ -42,13 +45,21 @@ const UserManagement = () => {
       console.log(err);
     }
   };
+  const fetchProjects = async () => {
+    try {
+      const res = await API.get("/projects");
+      setProjects(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-  // 🔄 Handle Change
+ 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // 🚀 Submit (Create / Update)
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -58,6 +69,7 @@ const UserManagement = () => {
         email: form.email,
         password: form.password,
         role: form.role,
+        project: form.project,
       };
 
       if (editId) {
@@ -81,14 +93,13 @@ const UserManagement = () => {
       setEditId(null);
       setShowForm(false);
       fetchUsers();
-
     } catch (err) {
       console.log(err.response?.data);
       alert("Error ❌");
     }
   };
 
-  // ✏️ Edit
+ 
   const handleEdit = (user) => {
     setShowForm(true);
     setEditId(user._id);
@@ -104,7 +115,6 @@ const UserManagement = () => {
     });
   };
 
-  // 🗑 Delete
   const handleDelete = async (id) => {
     if (!window.confirm("Delete user?")) return;
 
@@ -115,18 +125,12 @@ const UserManagement = () => {
 
   return (
     <div className="onboard-layout">
-
-
       <div className="onboard-content">
         <h2>User Management</h2>
 
-        {/* ================= TABLE VIEW ================= */}
         {!showForm && (
           <>
-            <button
-              className="create-btn"
-              onClick={() => setShowForm(true)}
-            >
+            <button className="create-btn" onClick={() => setShowForm(true)}>
               + Create User
             </button>
 
@@ -199,11 +203,7 @@ const UserManagement = () => {
             </div>
 
             <div className="form-row">
-              <select
-                name="role"
-                value={form.role}
-                onChange={handleChange}
-              >
+              <select name="role" value={form.role} onChange={handleChange}>
                 <option value="">Select Role</option>
                 <option>ADMIN</option>
                 <option>PD</option>
@@ -212,18 +212,18 @@ const UserManagement = () => {
               </select>
 
               <select
-                name="Project"
+                name="project"
                 value={form.project}
                 onChange={handleChange}
               >
                 <option value="">Select Project</option>
-                <option>iPGRS</option>
-                <option>SSP</option>
-                <option>WEB PORTAL</option>
 
+                {projects.map((p) => (
+                  <option key={p._id} value={p._id}>
+                    {p.name}
+                  </option>
+                ))}
               </select>
-
-
             </div>
 
             <div className="form-row">

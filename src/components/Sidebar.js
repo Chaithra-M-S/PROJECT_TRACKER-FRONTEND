@@ -19,6 +19,7 @@ const Sidebar = ({ role }) => {
         <h3 className="logo">Tracker</h3>
 
         {role === "SUPERADMIN" && (
+          
           <ul>
             <li>
               <Link to="/superadmin">Dashboard</Link>
@@ -70,7 +71,6 @@ const Sidebar = ({ role }) => {
             <li>Dashboard</li>
             <li>My Projects</li>
             <li>Create Tasks</li>
-            <li>Assign Employees</li>
             <li>Task Status</li>
           </ul>
         )}
