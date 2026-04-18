@@ -1,0 +1,79 @@
+.dashboard-layout {
+  display: flex;
+}
+
+/* Content */
+.dashboard-content {
+  margin-left: 260px; /* same as sidebar */
+  padding: 20px 30px;
+  background: #f5f7fb;
+  min-height: 100vh;
+  width: calc(100% - 260px);
+  font-family: "Segoe UI", sans-serif;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* Header */
+.dashboard-header {
+  margin: 0;
+  padding: 0;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.dashboard-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 30px;
+}
+
+.admin-info {
+  background: white;
+  padding: 8px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Cards */
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.dashboard-card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid #0f4c81;
+  transition: 0.3s;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+}
+
+.dashboard-card h3 {
+  margin: 0;
+  font-size: 30px;
+  color: #0f4c81;
+}
+
+.dashboard-card p {
+  margin-top: 10px;
+  color: #666;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 20px;
+  }
+}
