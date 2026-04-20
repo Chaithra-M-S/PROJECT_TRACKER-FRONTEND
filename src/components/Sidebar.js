@@ -19,7 +19,7 @@ const Sidebar = ({ role }) => {
         <h3 className="logo">Tracker</h3>
 
         {role === "SUPERADMIN" && (
-          
+
           <ul>
             <li>
               <Link to="/superadmin">Dashboard</Link>
@@ -29,9 +29,7 @@ const Sidebar = ({ role }) => {
               <Link to="/superadmin/users">Create Admin</Link>
             </li>
 
-            <li>
-              <Link to="/superadmin/manage-admins">Manage Admins</Link>
-            </li>
+
 
             <li>
               <Link to="/superadmin/manage-projects">Manage Projects</Link>
@@ -42,7 +40,7 @@ const Sidebar = ({ role }) => {
             </li>
 
             <li>
-              <Link to="/superadmin/settings">Settings</Link>
+              <Link to="/superadmin/change-password">Change Password</Link>
             </li>
           </ul>
         )}
@@ -51,27 +49,28 @@ const Sidebar = ({ role }) => {
           <ul>
             <li><Link to="/admin">Dashboard</Link></li>
             <li><Link to="/admin/users">Manage Users</Link></li>
-            <li><Link to="/admin/projects">Projects</Link></li>
             <li><Link to="/admin/reports">Reports</Link></li>
-            <li><Link to="/admin/settings">Settings</Link></li>
+            <li><Link to="/admin/change-password">Change Password</Link></li>
           </ul>
         )}
 
         {role === "PD" && (
           <ul>
-            <li>Dashboard</li>
-            <li>Create Project</li>
-            <li>Assign Managers</li>
-            <li>Project Overview</li>
+            <li><Link to="/pd">Dashboard</Link></li>
+            <li><Link to="/pd/create-project">Create Project</Link></li>
+            <li><Link to="/pd/assign-managers">Assign Managers</Link></li>
+            <li><Link to="/pd/project-overview">Project Overview</Link></li>
+            <li><Link to="/pd/change-password">Change Password</Link></li>
           </ul>
         )}
 
         {role === "MANAGER" && (
           <ul>
-            <li>Dashboard</li>
-            <li>My Projects</li>
-            <li>Create Tasks</li>
-            <li>Task Status</li>
+            <li><Link to="/manager">Dashboard</Link></li>
+            <li><Link to="/manager/my-projects">My Projects</Link></li>
+            <li><Link to="/manager/create-tasks">Create Tasks</Link></li>
+            <li><Link to="/manager/task-status">Task Status</Link></li>
+            <li><Link to="/manager/change-password">Change Password</Link></li>
           </ul>
         )}
 
@@ -80,6 +79,7 @@ const Sidebar = ({ role }) => {
             <li>Dashboard</li>
             <li>My Tasks</li>
             <li>Update Status</li>
+            <li>Change Password</li>
           </ul>
         )}
       </div>

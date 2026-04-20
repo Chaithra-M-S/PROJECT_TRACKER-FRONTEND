@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
 import "../../css/ManageProject.css";
+import API from "../../APIs/api";
 
 const ManageProjects = () => {
   const [showForm, setShowForm] = useState(false);
@@ -8,21 +9,49 @@ const ManageProjects = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    assignedAdmin: "",
   });
+  const [projects, setProjects] = useState([]);
+  const [editId, setEditId] = useState(null);
 
-  const [admin, setadmins] = useState([]);
+  const fetchProjects = async () => {
+    try {
+      const res = await API.get("/projects");
+      setProjects(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-  // 🔹 Fetch Project Directors
-  // Fetch admins
-  const fetchAdmins = async () => {
-    const res = await axios.get("http://localhost:5000/api/projects/available-admins");
-    setadmins(res.data);
+
+
+  const handleEdit = (project) => {
+    setShowForm(true);
+    setEditId(project._id);
+
+    setFormData({
+      name: project.name,
+      description: project.description
+    });
+  };
+
+  //DELETE FUNCTION
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this project?")) return;
+
+    try {
+      await API.delete(`/projects/${id}`);
+      alert("Deleted ✅");
+      fetchProjects();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
-    fetchAdmins();
+    fetchProjects();
   }, []);
+
+
 
   // 🔹 Handle input
   const handleChange = (e) => {
@@ -34,24 +63,34 @@ const ManageProjects = () => {
 
   // 🔹 Submit form
   const handleSubmit = async (e) => {
+    console.log("FORM DATA:", formData);
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5000/api/projects/create", formData);
+      if (editId) {
+        // ✅ UPDATE
+        await API.put(`/projects/${editId}`, formData);
+        alert("Project Updated ✅");
+      } else {
+        // ✅ CREATE
+        await API.post("/projects/create", formData);
+        alert("Project Created ✅");
+      }
 
-      alert("Project Created Successfully");
-
-      // Reset form
+      // Reset
       setFormData({
         name: "",
         description: "",
-        assignedAdmin: "",
       });
 
+      setEditId(null);
       setShowForm(false);
+
+      fetchProjects();
+
     } catch (err) {
-      console.error("Error creating project", err);
-      alert("Error creating project");
+      console.error(err);
+      alert("Error ❌");
     }
   };
 
@@ -91,9 +130,11 @@ const ManageProjects = () => {
               ></textarea>
             </div>
 
-           
 
-            <button className="submit-btn">Create Project</button>
+
+            <button className="submit-btn">
+              {editId ? "Update Project" : "Create Project"}
+            </button>
             <button
               type="button"
               className="cancel-btn"
@@ -106,9 +147,52 @@ const ManageProjects = () => {
       )}
 
       {/* Table Placeholder */}
-      <div className="table-card">
-        <p>Project list will appear here...</p>
-      </div>
+      <table className="project-table">
+        <thead>
+          <tr>
+            <th>Project Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {projects.length > 0 ? (
+            projects.map((p) => (
+              <tr key={p._id}>
+                <td>{p.name}</td>
+                <td>
+                  {p.description ? (
+                    p.description
+                  ) : (
+                    <span className="no-data">No description</span>
+                  )}
+                </td>
+
+                <td>
+                  <button
+                    className="edit-btn"
+                    onClick={() => handleEdit(p)}
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(p._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="3">No projects found</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 };

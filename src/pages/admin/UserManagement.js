@@ -3,10 +3,12 @@ import React, { useState, useEffect } from "react";
 import "../../css/UserManagement.css";
 import API from "../../APIs/api";
 
+
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const [form, setForm] = useState({
     firstName: "",
@@ -16,18 +18,10 @@ const UserManagement = () => {
     role: "",
     designation: "",
     password: "",
+    confirmPassword: ""
   });
 
-  // 🔐 Generate Password
-  const generatePassword = () => {
-    const chars =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#";
-    let pass = "";
-    for (let i = 0; i < 8; i++) {
-      pass += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return pass;
-  };
+
 
   // 📦 Load Users
   useEffect(() => {
@@ -52,12 +46,34 @@ const UserManagement = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    let newErrors = {};
+
+    // ✅ Frontend validation
+    if (!editId && form.password !== form.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    if (!form.email) {
+      newErrors.email = "Email is required";
+    }
+
+    if (!form.firstName) {
+      newErrors.firstName = "First name is required";
+    }
+
+    // Stop if errors exist
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     try {
       const payload = {
         name: `${form.firstName} ${form.lastName}`,
         email: form.email,
         password: form.password,
         role: form.role,
+        designation: form.designation
       };
 
       if (editId) {
@@ -68,6 +84,8 @@ const UserManagement = () => {
         alert("User created ✅");
       }
 
+      setErrors({}); // ✅ clear errors
+
       setForm({
         firstName: "",
         lastName: "",
@@ -75,7 +93,8 @@ const UserManagement = () => {
         phone: "",
         role: "",
         designation: "",
-        password: generatePassword(),
+        password: "",
+        confirmPassword: ""
       });
 
       setEditId(null);
@@ -83,8 +102,14 @@ const UserManagement = () => {
       fetchUsers();
 
     } catch (err) {
-      console.log(err.response?.data);
-      alert("Error ❌");
+      const message = err.response?.data?.message;
+
+      // ✅ Backend error handling
+      if (message === "User already exists") {
+        setErrors({ email: "User with this email already exists" });
+      } else {
+        setErrors({ general: "Something went wrong" });
+      }
     }
   };
 
@@ -172,7 +197,7 @@ const UserManagement = () => {
                 placeholder="First Name"
                 value={form.firstName}
                 onChange={handleChange}
-              />
+              />{errors.firstName && <p className="error-text">{errors.firstName}</p>}
 
               <input
                 name="lastName"
@@ -188,7 +213,7 @@ const UserManagement = () => {
                 placeholder="Email"
                 value={form.email}
                 onChange={handleChange}
-              />
+              />{errors.email && <p className="error-text">{errors.email}</p>}
 
               <input
                 name="phone"
@@ -206,36 +231,44 @@ const UserManagement = () => {
               >
                 <option value="">Select Role</option>
 
-                <option>PD</option>
                 <option>MANAGER</option>
                 <option>EMPLOYEE</option>
               </select>
-
-
-
-
+            </div>
+            <div className="form-row">
+              <input
+                name="designation"
+                placeholder="Designation"
+                value={form.designation}
+                onChange={handleChange}
+              />
             </div>
 
             <div className="form-row">
               <input
+                type="password"
                 name="password"
+                placeholder="Password"
                 value={form.password}
                 onChange={handleChange}
               />
-
-              <button
-                type="button"
-                onClick={() =>
-                  setForm({ ...form, password: generatePassword() })
-                }
-              >
-                Generate
-              </button>
             </div>
+
+            <div className="form-row">
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={form.confirmPassword}
+                onChange={handleChange}
+              />
+            </div>{errors.confirmPassword && (
+              <p className="error-text">{errors.confirmPassword}</p>
+            )}
 
             <div className="form-actions">
               <button type="submit" className="submit-btn">
-                {editId ? "Update" : "Save"}
+                {editId ? "Update" : "Create"}
               </button>
 
               <button

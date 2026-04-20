@@ -9,6 +9,11 @@
   overflow-x: hidden;
 }
 
+.error-text {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+}
 /* ================= HEADER ================= */
 .onboard-content h2 {
   font-size: 24px;

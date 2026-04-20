@@ -39,7 +39,7 @@
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .form-card h2 {
@@ -95,7 +95,7 @@
 
 .cancel-btn {
   background-color: #dc2626;
-   
+
   color: white;
   padding: 10px 20px;
   border: none;
@@ -105,4 +105,96 @@
 
 .cancel-btn:hover {
   background-color: #b91c1c;
+}
+
+/* ================= TABLE CARD ================= */
+.table-card {
+  margin-top: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* ================= PROJECT TABLE ================= */
+.project-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* HEADER */
+.project-table thead {
+  background: #f1f5f9;
+}
+
+.project-table th {
+  text-align: left;
+  padding: 14px;
+  font-size: 14px;
+  color: #475569;
+}
+
+/* BODY */
+.project-table td {
+  padding: 14px;
+  font-size: 14px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* ROW HOVER */
+.project-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* EMPTY MESSAGE */
+.project-table td[colspan="2"] {
+  text-align: center;
+  color: #9ca3af;
+  padding: 20px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .project-table th,
+  .project-table td {
+    padding: 10px;
+    font-size: 12px;
+  }
+}
+
+/* No Description Text */
+.no-data {
+  color: #9ca3af;
+  font-style: italic;
+}
+/* ================= ACTION BUTTONS ================= */
+.project-table button {
+  padding: 6px 12px;
+  margin-right: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: 0.2s;
+}
+
+/* EDIT BUTTON */
+.edit-btn {
+  background: #3b82f6; /* blue */
+  color: white;
+}
+
+.edit-btn:hover {
+  background: #2563eb;
+}
+
+/* DELETE BUTTON */
+.delete-btn {
+  background: #ef4444; /* red */
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
 }

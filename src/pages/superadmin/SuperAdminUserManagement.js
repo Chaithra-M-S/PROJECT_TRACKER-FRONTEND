@@ -20,7 +20,7 @@ const UserManagement = () => {
     password: "",
   });
 
-  
+
   const generatePassword = () => {
     const chars =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#";
@@ -54,7 +54,7 @@ const UserManagement = () => {
     }
   };
 
- 
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -99,7 +99,7 @@ const UserManagement = () => {
     }
   };
 
- 
+
   const handleEdit = (user) => {
     setShowForm(true);
     setEditId(user._id);
