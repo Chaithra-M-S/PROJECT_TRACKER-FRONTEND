@@ -16,8 +16,14 @@ const CreateSubProject = () => {
     status: "Not Started"
   });
 
+  const fetchTasks = async () => {
+    const res = await API.get("/tasks");
+    setTasks(res.data);
+  };
+
   useEffect(() => {
     fetchProjects();
+    fetchTasks();
 
   }, []);
 
@@ -26,58 +32,62 @@ const CreateSubProject = () => {
     setProjects(res.data);
   };
 
-
-
   const handleProjectChange = async (e) => {
     const projectId = e.target.value;
 
-    console.log("SELECTED PROJECT ID:", projectId); // 👈 MUST print valid ID
+    console.log("SELECTED PROJECT:", projectId); // debug
 
-    // update form FIRST
-    setForm((prev) => ({
-      ...prev,
-      project: projectId
-    }));
-
-    // ❗ STOP if empty
-    if (!projectId) {
-      console.log("No project selected");
-      return;
-    }
+    setForm({ ...form, project: projectId });
 
     try {
       const res = await API.get(`/users/managers/${projectId}`);
-      console.log("Managers:", res.data);
       setManagers(res.data);
+      console.log("Managers API response:", res.data);
     } catch (err) {
       console.error("Error fetching managers:", err);
     }
   };
 
 
+
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newTask = {
-      ...form,
-      progress: form.status === "Completed" ? "100%" : "0%"
-    };
+    // ✅ validate FIRST
+    if (!form.project || !form.taskName || !form.manager) {
+      alert("Please fill all required fields");
+      return;
+    }
 
-    setTasks([...tasks, newTask]);
+    try {
+      console.log("FORM DATA:", form);
 
-    setForm({
-      project: "",
-      taskName: "",
-      description: "",
-      manager: "",
-      deadline: "",
-      priority: "",
-      status: "Not Started"
-    });
+      const res = await API.post("/tasks", form);
+
+      console.log("Task saved:", res.data);
+
+      fetchTasks();
+
+      setForm({
+        project: "",
+        taskName: "",
+        description: "",
+        manager: "",
+        deadline: "",
+        priority: "",
+        status: "Not Started"
+      });
+
+    } catch (err) {
+      console.error("CREATE TASK ERROR:", err.response?.data || err.message);
+    }
   };
 
   return (
@@ -114,9 +124,9 @@ const CreateSubProject = () => {
 
         <div className="form-row">
           <select name="manager" value={form.manager} onChange={handleChange}>
-            <option value="">Assign Manager</option>
+            <option value="" disabled> Assign Manager</option>
             {managers.map((m) => (
-              <option key={m._id} value={m.name}>
+              <option key={m._id} value={m._id}>
                 {m.name}
               </option>
             ))}
@@ -164,7 +174,7 @@ const CreateSubProject = () => {
               <td>{t.project?.name}</td>
               <td>{t.taskName}</td>
               <td>{t.description}</td>
-              <td>{t.manager}</td>
+              <td>{t.manager?.name}</td>
               <td>{t.deadline}</td>
               <td>{t.priority}</td>
               <td>

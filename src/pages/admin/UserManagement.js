@@ -9,6 +9,7 @@ const UserManagement = () => {
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState(null);
   const [errors, setErrors] = useState({});
+  const [projects, setProjects] = useState([]);
 
   const [form, setForm] = useState({
     firstName: "",
@@ -16,16 +17,24 @@ const UserManagement = () => {
     email: "",
     phone: "",
     role: "",
+    project: "",
     designation: "",
     password: "",
+
+
     confirmPassword: ""
   });
 
+  const fetchProjects = async () => {
+    const res = await API.get("/projects");
+    setProjects(res.data);
+  };
 
 
   // 📦 Load Users
   useEffect(() => {
     fetchUsers();
+    fetchProjects();
   }, []);
 
   const fetchUsers = async () => {
@@ -92,6 +101,7 @@ const UserManagement = () => {
         email: "",
         phone: "",
         role: "",
+        project: "",
         designation: "",
         password: "",
         confirmPassword: ""
