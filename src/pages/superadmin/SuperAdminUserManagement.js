@@ -18,19 +18,8 @@ const UserManagement = () => {
     designation: "",
     project: "",
     password: "",
+    confirmPassword: "",
   });
-
-
-  const generatePassword = () => {
-    const chars =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#";
-    let pass = "";
-    for (let i = 0; i < 8; i++) {
-      pass += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return pass;
-  };
-
 
   useEffect(() => {
     fetchUsers();
@@ -45,6 +34,7 @@ const UserManagement = () => {
       console.log(err);
     }
   };
+
   const fetchProjects = async () => {
     try {
       const res = await API.get("/projects");
@@ -54,14 +44,17 @@ const UserManagement = () => {
     }
   };
 
-
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (form.password !== form.confirmPassword) {
+      alert("Passwords do not match ❌");
+      return;
+    }
 
     try {
       const payload = {
@@ -87,7 +80,9 @@ const UserManagement = () => {
         phone: "",
         role: "",
         designation: "",
-        password: generatePassword(),
+        project: "",
+        password: "",
+        confirmPassword: "",
       });
 
       setEditId(null);
@@ -99,7 +94,6 @@ const UserManagement = () => {
     }
   };
 
-
   const handleEdit = (user) => {
     setShowForm(true);
     setEditId(user._id);
@@ -110,8 +104,12 @@ const UserManagement = () => {
       firstName: names[0] || "",
       lastName: names[1] || "",
       email: user.email,
+      phone: user.phone || "",
       role: user.role,
+      designation: user.designation || "",
+      project: user.project || "",
       password: "",
+      confirmPassword: "",
     });
   };
 
@@ -142,6 +140,7 @@ const UserManagement = () => {
                   <th>Name</th>
                   <th>Email</th>
                   <th>Role</th>
+                  <th>Project</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -152,6 +151,7 @@ const UserManagement = () => {
                     <td>{u.name}</td>
                     <td>{u.email}</td>
                     <td>{u.role}</td>
+                    <td>{u.project}</td>
                     <td>
                       <button onClick={() => handleEdit(u)}>Edit</button>
                       <button onClick={() => handleDelete(u._id)}>
@@ -165,7 +165,6 @@ const UserManagement = () => {
           </>
         )}
 
-        {/* ================= FORM VIEW ================= */}
         {showForm && (
           <form className="onboard-form" onSubmit={handleSubmit}>
             <h3>{editId ? "Edit User" : "Create User"}</h3>
@@ -211,36 +210,39 @@ const UserManagement = () => {
                 <option>EMPLOYEE</option>
               </select>
 
-              <select
-                name="project"
-                value={form.project}
-                onChange={handleChange}
-              >
-                <option value="">Select Project</option>
+              {form.role !== "PD" && (
+                <select
+                  name="project"
+                  value={form.project}
+                  onChange={handleChange}
+                >
+                  <option value="">Select Project</option>
 
-                {projects.map((p) => (
-                  <option key={p._id} value={p._id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
+                  {projects.map((p) => (
+                    <option key={p._id} value={p._id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
 
             <div className="form-row">
               <input
+                type="password"
                 name="password"
+                placeholder="Password"
                 value={form.password}
                 onChange={handleChange}
               />
 
-              <button
-                type="button"
-                onClick={() =>
-                  setForm({ ...form, password: generatePassword() })
-                }
-              >
-                Generate
-              </button>
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={form.confirmPassword}
+                onChange={handleChange}
+              />
             </div>
 
             <div className="form-actions">

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import API from "../../APIs/api";
-import "../../css/UserManagement.css";
+import "../../css/MyProjects.css";
 
 const MyProjects = () => {
   const [tasks, setTasks] = useState([]);
+  const [selected, setSelected] = useState(null);
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     fetchTasks();
@@ -15,10 +16,23 @@ const MyProjects = () => {
     try {
       const res = await API.get("/tasks");
 
-      // show only assigned tasks
-      const myTasks = res.data.filter(
-        (t) => t.manager === user.name
-      );
+      // support both id and _id from login data
+      const userId = user._id || user.id;
+
+      const myTasks = res.data.filter((t) => {
+        if (!t.manager) return false;
+
+        // manager populated object
+        if (typeof t.manager === "object") {
+          return (
+            t.manager._id === userId ||
+            t.manager.name === user.name
+          );
+        }
+
+        // manager plain id string
+        return t.manager === userId;
+      });
 
       setTasks(myTasks);
     } catch (err) {
@@ -26,82 +40,122 @@ const MyProjects = () => {
     }
   };
 
-  const handleUpdate = async (id, status, remarks) => {
+  const handleSave = async () => {
     try {
-      await API.put(`/tasks/${id}`, { status, remarks });
+      await API.put(`/tasks/${selected._id}`, {
+        status: selected.status,
+        remarks: selected.remarks,
+      });
+
+      setSelected(null);
       fetchTasks();
     } catch (err) {
       console.log(err);
     }
   };
 
+  const getPriorityClass = (priority) => {
+    if (priority === "High") return "priority-high";
+    if (priority === "Medium") return "priority-medium";
+    return "priority-low";
+  };
+
   return (
-    <div className="onboard-content">
-      <h2>My Projects</h2>
+    <div className="project-page">
+      <h2>My Tasks</h2>
 
-      <table className="user-table">
-        <thead>
-          <tr>
-            <th>Project</th>
-            <th>Task</th>
-            <th>Deadline</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th>Remarks</th>
-            <th>Update</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {tasks.map((t) => (
-            <tr key={t._id}>
-              <td>{t.project}</td>
-              <td>{t.taskName}</td>
-              <td>{t.deadline?.split("T")[0]}</td>
-              <td>{t.priority}</td>
-
-              <td>
-                <select
-                  value={t.status}
-                  onChange={(e) =>
-                    handleUpdate(t._id, e.target.value, t.remarks)
-                  }
-                >
-                  <option>Not Started</option>
-                  <option>In Progress</option>
-                  <option>Completed</option>
-                </select>
-              </td>
-
-              <td>
-                <input
-                  type="text"
-                  value={t.remarks || ""}
-                  placeholder="Delay / Clarification"
-                  onChange={(e) => {
-                    const updated = tasks.map((task) =>
-                      task._id === t._id
-                        ? { ...task, remarks: e.target.value }
-                        : task
-                    );
-                    setTasks(updated);
-                  }}
-                />
-              </td>
-
-              <td>
-                <button
-                  onClick={() =>
-                    handleUpdate(t._id, t.status, t.remarks)
-                  }
-                >
-                  Save
-                </button>
-              </td>
+      <div className="project-card">
+        <table className="modern-table">
+          <thead>
+            <tr>
+              <th>Task</th>
+              <th>Description</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {tasks.length > 0 ? (
+              tasks.map((t) => (
+                <tr key={t._id}>
+                  <td>{t.taskName}</td>
+                  <td>{t.description}</td>
+
+                  <td>
+                    <span className={getPriorityClass(t.priority)}>
+                      {t.priority}
+                    </span>
+                  </td>
+
+                  <td>{t.status}</td>
+
+                  <td>
+                    <button
+                      className="update-btn"
+                      onClick={() =>
+                        setSelected({
+                          ...t,
+                          status: t.status,
+                        })
+                      }
+                    >
+                      Update
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" style={{ textAlign: "center" }}>
+                  No Tasks Assigned
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {selected && (
+        <div className="modal-bg">
+          <div className="modal-box">
+            <h3>Update Task</h3>
+
+            <select
+              value={selected.status}
+              onChange={(e) =>
+                setSelected({
+                  ...selected,
+                  status: e.target.value,
+                })
+              }
+            >
+              <option>Not Started</option>
+              <option>In Progress</option>
+              <option>Completed</option>
+            </select>
+
+            <textarea
+              placeholder="Remarks"
+              value={selected.remarks || ""}
+              onChange={(e) =>
+                setSelected({
+                  ...selected,
+                  remarks: e.target.value,
+                })
+              }
+            />
+
+            <div className="modal-actions">
+              <button onClick={handleSave}>Save</button>
+              <button onClick={() => setSelected(null)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

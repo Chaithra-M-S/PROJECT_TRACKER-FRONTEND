@@ -1,0 +1,269 @@
+/* ===============================
+   MY PROJECTS PAGE CSS
+================================= */
+.project-page {
+  margin-left: 260px;              /* same as sidebar width */
+  width: calc(100% - 260px);      /* take remaining width */
+  min-height: 100vh;
+  padding: 30px;
+  background: #f4f6fa;
+  box-sizing: border-box;
+}
+
+/* Heading */
+.project-page h2 {
+  font-size: 30px;
+  font-weight: 700;
+  color: #123a68;
+  margin-bottom: 25px;
+}
+
+/* Main Card */
+.project-card {
+  width: 100%;
+  max-width: 100%;
+  background: #fff;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+/* ===============================
+   TABLE
+================================= */
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+.modern-table thead tr {
+  background: #eef3fb;
+}
+
+.modern-table th {
+  color: #123a68;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 16px;
+  text-align: left;
+}
+
+.modern-table td {
+  padding: 16px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.modern-table tbody tr {
+  transition: 0.2s ease;
+}
+
+.modern-table tbody tr:hover {
+  background: #f9fbff;
+}
+
+/* ===============================
+   PRIORITY TAGS
+================================= */
+
+.priority-high {
+  color: #d32f2f;
+  font-weight: 700;
+}
+
+.priority-medium {
+  color: #f57c00;
+  font-weight: 700;
+}
+
+.priority-low {
+  color: #388e3c;
+  font-weight: 700;
+}
+
+/* ===============================
+   BUTTONS
+================================= */
+
+.update-btn {
+  background: linear-gradient(135deg, #124ea1, #1d67d6);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  font-weight: 600;
+}
+
+.update-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(18, 78, 161, 0.25);
+}
+
+/* ===============================
+   MODAL BACKGROUND
+================================= */
+
+.modal-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(18, 25, 38, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  padding: 20px;
+}
+
+/* ===============================
+   MODAL BOX
+================================= */
+
+.modal-box {
+  width: 100%;
+  max-width: 460px;
+  background: white;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+  animation: popup 0.25s ease;
+}
+
+@keyframes popup {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-box h3 {
+  margin-bottom: 20px;
+  color: #123a68;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* Inputs */
+.modal-box select,
+.modal-box textarea,
+.modal-box input[type="range"] {
+  width: 100%;
+  margin-top: 14px;
+}
+
+.modal-box select,
+.modal-box textarea {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #d8e0ef;
+  font-size: 14px;
+  outline: none;
+}
+
+.modal-box select:focus,
+.modal-box textarea:focus {
+  border-color: #1d67d6;
+}
+
+.modal-box textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.modal-box label {
+  display: block;
+  margin-top: 16px;
+  font-weight: 600;
+  color: #444;
+}
+
+/* Slider */
+.modal-box input[type="range"] {
+  accent-color: #1d67d6;
+  cursor: pointer;
+}
+
+/* ===============================
+   MODAL ACTION BUTTONS
+================================= */
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.modal-actions button:first-child {
+  background: #124ea1;
+  color: white;
+}
+
+.modal-actions button:first-child:hover {
+  background: #0f4287;
+}
+
+.modal-actions button:last-child {
+  background: #eef2f8;
+  color: #333;
+}
+
+.modal-actions button:last-child:hover {
+  background: #dfe7f3;
+}
+
+/* ===============================
+   RESPONSIVE
+================================= */
+
+@media (max-width: 992px) {
+  .project-page {
+    padding: 20px;
+  }
+
+  .project-page h2 {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 768px) {
+  .project-page {
+    margin-left: 0;
+    width: 100%;
+    padding: 15px;
+  }
+}
+@media (max-width: 480px) {
+  .project-page h2 {
+    font-size: 22px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+}

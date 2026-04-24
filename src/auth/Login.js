@@ -41,15 +41,21 @@ const Login = () => {
           "user",
           JSON.stringify({
             token: res.data.token,
-            role: res.data.role,
+            _id: res.data.user._id,
+            name: res.data.user.name,
+            email: res.data.user.email,
+            role: res.data.user.role,
+            project: res.data.user.project,
           }),
         );
 
         // Navigation
-        if (res.data.role === "SUPERADMIN") navigate("/superadmin");
-        else if (res.data.role === "ADMIN") navigate("/admin");
-        else if (res.data.role === "PD") navigate("/pd");
-        else if (res.data.role === "MANAGER") navigate("/manager");
+        const role = res.data.user.role;
+
+        if (role === "SUPERADMIN") navigate("/superadmin");
+        else if (role === "ADMIN") navigate("/admin");
+        else if (role === "PD") navigate("/pd");
+        else if (role === "MANAGER") navigate("/manager");
         else navigate("/employee");
       } catch (error) {
         setLoginError(error.response?.data?.message || "Login failed");

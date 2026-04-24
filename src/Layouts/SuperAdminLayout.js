@@ -1,6 +1,6 @@
 import Sidebar from "../components/Sidebar";
 import { Outlet } from "react-router-dom";
-import "../css/Layout.css";
+// import "../css/Layout.css";
 
 const SuperAdminLayout = () => {
   return (

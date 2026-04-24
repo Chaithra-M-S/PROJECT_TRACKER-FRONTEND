@@ -50,7 +50,7 @@ function App() {
 
         {/* //Manager routes */}
         <Route path="/manager" element={<ManagerLayout />}>
-          <Route path="projects" element={<MyProjects />} />
+          <Route path="my-projects" element={<MyProjects />} />
           <Route path="change-password" element={<ChangePassword />} />
         </Route>
 
