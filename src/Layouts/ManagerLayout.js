@@ -5,7 +5,7 @@ const ManagerLayout = () => {
     <div className="layout">
       <Sidebar role="MANAGER" />
       <div className="content">
-        <h2>Manager Dashboard</h2>
+        {/* <h2>Manager Dashboard</h2> */}
       </div>
       <div>
         <Outlet></Outlet>
