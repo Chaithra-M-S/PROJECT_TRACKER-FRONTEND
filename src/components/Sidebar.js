@@ -77,9 +77,9 @@ const Sidebar = ({ role }) => {
         {role === "EMPLOYEE" && (
           <ul>
             <li>Dashboard</li>
-            <li>My Tasks</li>
+            <li><Link to="/employee/my-tasks">My Tasks</Link></li>
             <li>Update Status</li>
-            <li>Change Password</li>
+            <li><Link to="/user/change-password">Change Password</Link></li>
           </ul>
         )}
       </div>
@@ -101,7 +101,7 @@ export default Sidebar;
 
 
 
-// import { Link, useLocation } from "react-router-dom";
+
 // import {
 //   LayoutDashboard,
 //   Users,

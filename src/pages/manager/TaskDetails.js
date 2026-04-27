@@ -1,6 +1,5 @@
-
-
 import React, { useEffect, useState } from "react";
+import Select from "react-select";
 import API from "../../APIs/api";
 import "../../css/TaskDetails.css";
 
@@ -35,14 +34,11 @@ const TaskDetails = ({ taskId, onClose }) => {
       setStatus(res.data.status);
 
       const projectId =
-        res.data.project?._id ||
-        res.data.project ||
-        user.project;
+        res.data.project?._id || res.data.project || user.project;
 
       console.log("PROJECT:", projectId);
 
       fetchEmployees(projectId);
-
     } catch (err) {
       console.log(err);
     }
@@ -58,7 +54,6 @@ const TaskDetails = ({ taskId, onClose }) => {
       console.log("Employees:", res.data);
 
       setEmployees(res.data);
-
     } catch (err) {
       console.log(err);
     }
@@ -92,20 +87,14 @@ const TaskDetails = ({ taskId, onClose }) => {
         deadline: subtaskForm.deadline,
         priority: subtaskForm.priority,
 
-        project:
-          task.project?._id ||
-          task.project ||
-          user.project,
+        project: task.project?._id || task.project || user.project,
 
-        manager:
-          task.manager?._id ||
-          task.manager ||
-          user.id,
+        manager: task.manager?._id || task.manager || user.id,
 
         parentTask: task._id,
         isSubtask: true,
 
-        assignedTo: subtaskForm.assignees
+        assignedTo: subtaskForm.assignees,
       });
 
       alert("Subtask Created");
@@ -117,9 +106,8 @@ const TaskDetails = ({ taskId, onClose }) => {
         description: "",
         deadline: "",
         priority: "Medium",
-        assignees: []
+        assignees: [],
       });
-
     } catch (err) {
       console.log(err.response?.data || err);
     }
@@ -129,57 +117,80 @@ const TaskDetails = ({ taskId, onClose }) => {
   return (
     <div className="task-overlay">
       <div className="task-modal">
-
         {/* HEADER */}
         <div className="task-header">
           <div>
-            <span className="task-id">
-              TASK-{task._id.slice(-4)}
-            </span>
+            <span className="task-id">TASK-{task._id.slice(-4)}</span>
 
             <h2>{task.taskName}</h2>
           </div>
 
-          <button
-            className="close-btn"
-            onClick={onClose}
-          >
+          <button className="close-btn" onClick={onClose}>
             ✕
           </button>
         </div>
 
         {/* BODY */}
         <div className="task-body">
-
+          {/* LEFT */}
           {/* LEFT */}
           <div className="task-left">
-
+            {/* DESCRIPTION */}
             <div className="task-section">
               <h3>Description</h3>
               <p>{task.description}</p>
             </div>
 
-            {/* SUBTASK */}
+            {/* TASK DETAILS BELOW DESCRIPTION */}
             <div className="task-section">
+              <h3>Task Details</h3>
 
+              <div className="detail-row">
+                <span>Priority:</span>
+                <strong>{task.priority}</strong>
+              </div>
+
+              <div className="detail-row">
+                <span>Deadline:</span>
+                <strong>{task.deadline?.slice(0, 10)}</strong>
+              </div>
+            </div>
+
+            {/* SUBTASK SECTION */}
+            <div className="task-section">
               <div className="section-top">
                 <h3>Subtasks</h3>
 
                 <button
                   className="add-btn"
-                  onClick={() =>
-                    setShowSubtaskForm(
-                      !showSubtaskForm
-                    )
-                  }
+                  onClick={() => setShowSubtaskForm(!showSubtaskForm)}
                 >
                   + Add Subtask
                 </button>
               </div>
 
+              {/* SHOW CREATED SUBTASKS */}
+              {task.subtasks?.length > 0 && (
+                <div className="saved-subtasks">
+                  {task.subtasks.map((sub) => (
+                    <div className="subtask-card" key={sub._id}>
+                      <h4>{sub.taskName}</h4>
+                      <p>{sub.description}</p>
+
+                      <div className="mini-row">
+                        <span>{sub.priority}</span>
+                        <span>{sub.deadline?.slice(0, 10)}</span>
+                      </div>
+
+                      <small>{sub.status}</small>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* ADD SUBTASK FORM */}
               {showSubtaskForm && (
                 <div className="subtask-form">
-
                   <input
                     placeholder="Subtask Name"
                     value={subtaskForm.title}
@@ -193,41 +204,32 @@ const TaskDetails = ({ taskId, onClose }) => {
 
                   <textarea
                     placeholder="Description"
-                    value={
-                      subtaskForm.description
-                    }
+                    value={subtaskForm.description}
                     onChange={(e) =>
                       setSubtaskForm({
                         ...subtaskForm,
-                        description:
-                          e.target.value,
+                        description: e.target.value,
                       })
                     }
                   />
 
                   <input
                     type="date"
-                    value={
-                      subtaskForm.deadline
-                    }
+                    value={subtaskForm.deadline}
                     onChange={(e) =>
                       setSubtaskForm({
                         ...subtaskForm,
-                        deadline:
-                          e.target.value,
+                        deadline: e.target.value,
                       })
                     }
                   />
 
                   <select
-                    value={
-                      subtaskForm.priority
-                    }
+                    value={subtaskForm.priority}
                     onChange={(e) =>
                       setSubtaskForm({
                         ...subtaskForm,
-                        priority:
-                          e.target.value,
+                        priority: e.target.value,
                       })
                     }
                   >
@@ -236,124 +238,85 @@ const TaskDetails = ({ taskId, onClose }) => {
                     <option>Low</option>
                   </select>
 
-                  {/* EMPLOYEE MULTI DROPDOWN */}
-                  <div className="employee-box">
+                  {/* EMPLOYEES */}
+                  <Select
+                    isMulti
+                    options={employees.map((emp) => ({
+                      value: emp._id,
+                      label: emp.name,
+                    }))}
+                    value={employees
+                      .filter((emp) => subtaskForm.assignees.includes(emp._id))
+                      .map((emp) => ({
+                        value: emp._id,
+                        label: emp.name,
+                      }))}
+                    onChange={(selected) =>
+                      setSubtaskForm({
+                        ...subtaskForm,
+                        assignees: selected
+                          ? selected.map((item) => item.value)
+                          : [],
+                      })
+                    }
+                    placeholder="Select Employees"
+                    className="react-select-container"
+                    classNamePrefix="react-select"
+                  />
 
-                    {employees.length > 0 ? (
-                      employees.map((emp) => (
-                        <label key={emp._id}>
-
-                          <input
-                            type="checkbox"
-                            checked={subtaskForm.assignees.includes(emp._id)}
-                            onChange={(e) => {
-
-                              if (e.target.checked) {
-                                setSubtaskForm({
-                                  ...subtaskForm,
-                                  assignees: [
-                                    ...subtaskForm.assignees,
-                                    emp._id
-                                  ]
-                                });
-
-                              } else {
-                                setSubtaskForm({
-                                  ...subtaskForm,
-                                  assignees:
-                                    subtaskForm.assignees.filter(
-                                      (id) => id !== emp._id
-                                    )
-                                });
-                              }
-
-                            }}
-                          />
-
-                          {emp.name}
-
-                        </label>
-                      ))
-                    ) : (
-                      <p>No Employees Found</p>
-                    )}
-
-                  </div>
-
-
-                  <button
-                    className="save-btn"
-                    onClick={saveSubtask}
-                  >
+                  <button className="save-btn" onClick={saveSubtask}>
                     Save Subtask
                   </button>
-
                 </div>
               )}
-
             </div>
-
           </div>
 
           {/* RIGHT */}
           <div className="task-right">
-
+            {/* STATUS BOX */}
             <div className="status-box">
               <select
                 value={status}
-                onChange={(e) =>
-                  setStatus(
-                    e.target.value
-                  )
-                }
+                onChange={(e) => setStatus(e.target.value)}
               >
-                <option>
-                  Not Started
-                </option>
-                <option>
-                  In Progress
-                </option>
-                <option>
-                  Completed
-                </option>
+                <option>Not Started</option>
+                <option>In Progress</option>
+                <option>Completed</option>
               </select>
 
-              <button
-                className="save-btn"
-                onClick={saveTask}
-              >
+              <button className="save-btn" onClick={saveTask}>
                 Save
               </button>
             </div>
 
-            <div className="details-box">
-              <h3>Details</h3>
+            {/* SUBTASKS CARD */}
+            <div className="task-section">
+              <h3>Subtasks</h3>
 
-              <div className="detail-row">
-                <span>Priority</span>
-                <strong>
-                  {task.priority}
-                </strong>
-              </div>
+              {task.subtasks?.length > 0 ? (
+                <div className="saved-subtasks">
+                  {task.subtasks.map((sub) => (
+                    <div className="subtask-card" key={sub._id}>
+                      <h4>{sub.taskName}</h4>
 
-              <div className="detail-row">
-                <span>Deadline</span>
-                <strong>
-                  {task.deadline?.slice(
-                    0,
-                    10
-                  )}
-                </strong>
-              </div>
+                      <p>{sub.description}</p>
 
-              <div className="detail-row">
-                <span>Status</span>
-                <strong>{status}</strong>
-              </div>
+                      <div className="mini-row">
+                        <span>{sub.priority}</span>
+
+                        <span>{sub.deadline?.slice(0, 10)}</span>
+                      </div>
+
+                      <small>{sub.status}</small>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>No Subtasks Created</p>
+              )}
             </div>
-
           </div>
-
         </div>
       </div>
     </div>

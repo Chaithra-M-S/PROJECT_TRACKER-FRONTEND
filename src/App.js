@@ -16,6 +16,7 @@ import ChangePassword from "./pages/common/ChangePassword";
 import MyProjects from "./pages/manager/MyProjects";
 import CreateSubProject from "./pages/pd/CreateSubProject";
 import PDDashboard from "./pages/pd/PDDashboard";
+import MyTasks from "./pages/employee/MyTasks";
 
 
 
@@ -57,6 +58,7 @@ function App() {
 
         {/* {Employee routes} */}
         <Route path="/employee" element={<EmployeeLayout />}>
+          <Route path="my-tasks" element={<MyTasks />} />
           <Route path="change-password" element={<ChangePassword />} />
         </Route>
 
