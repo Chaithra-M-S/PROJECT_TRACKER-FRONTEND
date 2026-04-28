@@ -6,6 +6,7 @@ import "../../css/TaskDetails.css";
 const TaskDetails = ({ taskId, onClose }) => {
   const [task, setTask] = useState(null);
   const [employees, setEmployees] = useState([]);
+  const [remarks, setRemarks] = useState("");
   const [status, setStatus] = useState("Not Started");
   const [showSubtaskForm, setShowSubtaskForm] = useState(false);
 
@@ -32,6 +33,7 @@ const TaskDetails = ({ taskId, onClose }) => {
 
       setTask(res.data);
       setStatus(res.data.status);
+      setRemarks(res.data.remarks || "");
 
       const projectId =
         res.data.project?._id || res.data.project || user.project;
@@ -65,6 +67,7 @@ const TaskDetails = ({ taskId, onClose }) => {
     try {
       await API.put(`/tasks/${taskId}`, {
         status,
+        remarks
       });
 
       fetchTask();
@@ -273,8 +276,8 @@ const TaskDetails = ({ taskId, onClose }) => {
           </div>
 
           {/* RIGHT */}
-          <div className="task-right">
-            {/* STATUS BOX */}
+          {/* <div className="task-right">
+            
             <div className="status-box">
               <select
                 value={status}
@@ -290,7 +293,7 @@ const TaskDetails = ({ taskId, onClose }) => {
               </button>
             </div>
 
-            {/* SUBTASKS CARD */}
+            
             <div className="task-section">
               <h3>Subtasks</h3>
 
@@ -316,6 +319,48 @@ const TaskDetails = ({ taskId, onClose }) => {
                 <p>No Subtasks Created</p>
               )}
             </div>
+          </div> */}
+          {/* RIGHT */}
+          <div className="task-right">
+
+            {/* COMMENT BOX TOP */}
+            <div className="task-section">
+              <h3>Comments / Remarks</h3>
+
+              <textarea
+                rows="6"
+                placeholder="Write remarks for Project Director..."
+                value={remarks}
+                onChange={(e) =>
+                  setRemarks(e.target.value)
+                }
+                className="remarks-box"
+              />
+            </div>
+
+            {/* STATUS BOX */}
+            <div className="status-box">
+
+              <select
+                value={status}
+                onChange={(e) =>
+                  setStatus(e.target.value)
+                }
+              >
+                <option>Not Started</option>
+                <option>In Progress</option>
+                <option>Completed</option>
+              </select>
+
+              <button
+                className="save-btn"
+                onClick={saveTask}
+              >
+                Save
+              </button>
+
+            </div>
+
           </div>
         </div>
       </div>

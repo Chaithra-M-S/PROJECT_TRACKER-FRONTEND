@@ -13,7 +13,7 @@ const MyProjects = () => {
 
   const fetchEmployees = async () => {
     try {
-      const res = await API.get(`/users/manager/${managerId}`);
+      const res = await API.get(`/tasks`);
       setEmployees(res.data);
     } catch (err) {
       console.error(err);
@@ -23,7 +23,7 @@ const MyProjects = () => {
 
   const fetchTasks = async () => {
     try {
-      const res = await API.get(`/tasks/my-tasks`);
+      const res = await API.get(`/tasks`);
       console.log("Tasks:", res.data);
       setTasks(res.data);
     } catch (err) {
