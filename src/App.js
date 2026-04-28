@@ -17,6 +17,7 @@ import MyProjects from "./pages/manager/MyProjects";
 import CreateSubProject from "./pages/pd/CreateSubProject";
 import PDDashboard from "./pages/pd/PDDashboard";
 import MyTasks from "./pages/employee/MyTasks";
+import PDProjectsView from "./pages/pd/PDProjectsView";
 
 
 
@@ -45,6 +46,7 @@ function App() {
         <Route path="/pd" element={<PDLayout />}>
           <Route index element={<PDDashboard />} />
           <Route path="create-project" element={<CreateSubProject />} />
+          <Route path="project-overview" element={<PDProjectsView/>}/>
 
           <Route path="change-password" element={<ChangePassword />} />
         </Route>

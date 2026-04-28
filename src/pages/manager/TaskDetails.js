@@ -6,7 +6,7 @@ import "../../css/TaskDetails.css";
 const TaskDetails = ({ taskId, onClose }) => {
   const [task, setTask] = useState(null);
   const [employees, setEmployees] = useState([]);
-  const [remarks, setRemarks] = useState("");
+  const [message, setMessage] = useState("");
   const [status, setStatus] = useState("Not Started");
   const [showSubtaskForm, setShowSubtaskForm] = useState(false);
 
@@ -22,6 +22,12 @@ const TaskDetails = ({ taskId, onClose }) => {
 
   useEffect(() => {
     fetchTask();
+
+    const interval = setInterval(() => {
+      fetchTask();
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, []);
 
   /* =========================
@@ -33,7 +39,6 @@ const TaskDetails = ({ taskId, onClose }) => {
 
       setTask(res.data);
       setStatus(res.data.status);
-      setRemarks(res.data.remarks || "");
 
       const projectId =
         res.data.project?._id || res.data.project || user.project;
@@ -67,7 +72,6 @@ const TaskDetails = ({ taskId, onClose }) => {
     try {
       await API.put(`/tasks/${taskId}`, {
         status,
-        remarks
       });
 
       fetchTask();
@@ -322,45 +326,63 @@ const TaskDetails = ({ taskId, onClose }) => {
           </div> */}
           {/* RIGHT */}
           <div className="task-right">
-
             {/* COMMENT BOX TOP */}
             <div className="task-section">
-              <h3>Comments / Remarks</h3>
+              <h3>Discussion</h3>
 
-              <textarea
-                rows="6"
-                placeholder="Write remarks for Project Director..."
-                value={remarks}
-                onChange={(e) =>
-                  setRemarks(e.target.value)
-                }
-                className="remarks-box"
-              />
+              <div className="chat-box">
+                {task.messages?.map((msg, i) => (
+                  <div
+                    key={i}
+                    className={
+                      msg.sender === "MANAGER"
+                        ? "chat-msg right"
+                        : "chat-msg left"
+                    }
+                  >
+                    <p>{msg.text}</p>
+                    <small>{msg.sender}</small>
+                  </div>
+                ))}
+              </div>
+
+              <div className="chat-input-row">
+                <input
+                  placeholder="Type message..."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+
+                <button
+                  onClick={async () => {
+                    await API.put(`/tasks/${taskId}`, {
+                      message,
+                    });
+
+                    setMessage("");
+                    fetchTask();
+                  }}
+                >
+                  Send
+                </button>
+              </div>
             </div>
 
             {/* STATUS BOX */}
             <div className="status-box">
-
               <select
                 value={status}
-                onChange={(e) =>
-                  setStatus(e.target.value)
-                }
+                onChange={(e) => setStatus(e.target.value)}
               >
                 <option>Not Started</option>
                 <option>In Progress</option>
                 <option>Completed</option>
               </select>
 
-              <button
-                className="save-btn"
-                onClick={saveTask}
-              >
+              <button className="save-btn" onClick={saveTask}>
                 Save
               </button>
-
             </div>
-
           </div>
         </div>
       </div>

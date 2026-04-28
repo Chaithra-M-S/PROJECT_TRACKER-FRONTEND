@@ -286,3 +286,18 @@
     padding: 20px;
   }
 }
+
+.task-info-row {
+  margin: 10px 0;
+}
+
+.task-info-row label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.deadline-text {
+  color: #e74c3c;
+  font-weight: 600;
+}

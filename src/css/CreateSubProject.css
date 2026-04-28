@@ -5,8 +5,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(6px);
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,11 +15,12 @@
 
 /* MODAL BOX */
 .modal-box {
-  width: 420px;
-  background: #f8fafc;
-  padding: 30px 25px;
-  border-radius: 20px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  width: 460px;
+  max-width: 95%;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 22px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
   animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -28,7 +29,7 @@
   margin-bottom: 20px;
   font-size: 24px;
   font-weight: 700;
-  color: #1e3a5f;
+  color: #0f172a;
   text-align: center;
 }
 
@@ -39,71 +40,89 @@
   gap: 14px;
 }
 
-/* INPUT + SELECT */
+/* INPUT + SELECT + TEXTAREA */
 .onboard-form input,
-.onboard-form select {
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid #d1d5db;
+.onboard-form select,
+.onboard-form textarea {
+  width: 100%;
+  padding: 13px 15px;
+  border-radius: 12px;
+  border: 1px solid #dbe2ea;
   font-size: 14px;
-  background: #fff;
-  transition: all 0.2s ease;
+  background: #f8fafc;
+  transition: 0.25s ease;
+  resize: none;
+  font-family: inherit;
 }
 
-/* INPUT FOCUS */
+/* DESCRIPTION BOX */
+.onboard-form textarea {
+  min-height: 120px;
+  line-height: 1.6;
+  color: #334155;
+}
+
+/* PLACEHOLDER */
+.onboard-form textarea::placeholder,
+.onboard-form input::placeholder {
+  color: #94a3b8;
+}
+
+/* FOCUS */
 .onboard-form input:focus,
-.onboard-form select:focus {
+.onboard-form select:focus,
+.onboard-form textarea:focus {
   border-color: #2563eb;
+  background: #ffffff;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
 }
 
-/* DATE INPUT FIX */
+/* DATE */
 .onboard-form input[type="date"] {
-  color: #555;
+  color: #475569;
 }
 
-/* BUTTON CONTAINER */
+/* BUTTON ROW */
 .modal-actions {
   display: flex;
-  justify-content: space-between;
-  margin-top: 15px;
-  gap: 10px;
+  gap: 12px;
+  margin-top: 18px;
 }
 
-/* CREATE BUTTON */
+/* SAVE BUTTON */
 .modal-actions button[type="submit"] {
   flex: 1;
   padding: 12px;
-  background: linear-gradient(135deg, #2563eb, #1e40af);
-  color: #fff;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.25s ease;
 }
 
 .modal-actions button[type="submit"]:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.25);
 }
 
 /* CANCEL BUTTON */
 .modal-actions button[type="button"] {
   flex: 1;
   padding: 12px;
-  background: #e5e7eb;
-  color: #333;
+  background: #e2e8f0;
+  color: #1e293b;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.25s ease;
 }
 
 .modal-actions button[type="button"]:hover {
-  background: #d1d5db;
+  background: #cbd5e1;
 }
 
 /* HEADER BUTTON */
@@ -112,49 +131,53 @@
   background: linear-gradient(135deg, #16a34a, #15803d);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.25s ease;
 }
 
 .submit-btn:hover {
-  box-shadow: 0 8px 20px rgba(22, 163, 74, 0.3);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(22, 163, 74, 0.25);
 }
 
 /* TABLE */
 .user-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 15px;
+  margin-top: 18px;
   background: white;
-  border-radius: 10px;
+  border-radius: 14px;
   overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
 }
 
 .user-table th {
-  background: #1e3a5f;
+  background: #0f172a;
   color: white;
-  padding: 12px;
+  padding: 14px;
   text-align: left;
+  font-size: 14px;
 }
 
 .user-table td {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
+  padding: 12px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #334155;
 }
 
 .user-table tr:hover {
-  background: #f1f5f9;
+  background: #f8fafc;
 }
 
-/* STATUS BADGES */
+/* STATUS */
 .status {
-  padding: 5px 10px;
-  border-radius: 8px;
+  padding: 6px 12px;
+  border-radius: 20px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .status.not-started {
@@ -176,7 +199,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(18px);
   }
   to {
     opacity: 1;
