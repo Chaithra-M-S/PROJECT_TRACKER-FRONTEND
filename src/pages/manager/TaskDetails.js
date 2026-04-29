@@ -334,11 +334,9 @@ const TaskDetails = ({ taskId, onClose }) => {
                 {task.messages?.map((msg, i) => (
                   <div
                     key={i}
-                    className={
-                      msg.sender === "MANAGER"
-                        ? "chat-msg right"
-                        : "chat-msg left"
-                    }
+                    className={`chat-msg ${
+                      msg.sender === user.role ? "right" : "left"
+                    }`}
                   >
                     <p>{msg.text}</p>
                     <small>{msg.sender}</small>
