@@ -1,0 +1,22 @@
+/* Layout container */
+.layout {
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+}
+
+/* Main content */
+.main-content {
+  margin-left: 260px;
+  width: calc(100% - 260px);
+  padding: 20px 30px;
+  background: #f5f7fb;
+  min-height: 100vh;
+}
